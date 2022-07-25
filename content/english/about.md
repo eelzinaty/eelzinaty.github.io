@@ -1,6 +1,6 @@
 +++
 title = "About"
-description = "Brief about Issam"
+description = "A Brief about Issam"
 aliases = ["about-us"]
 author = "Issam Alzinati"
 date = "2022-07-25"

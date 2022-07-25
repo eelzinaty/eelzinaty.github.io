@@ -6,3 +6,4 @@ demo/
 .devcontainer
 exampleSite/public/
 .DS_Store
+.vscode
