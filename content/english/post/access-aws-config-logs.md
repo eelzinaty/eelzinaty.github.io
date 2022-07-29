@@ -1,16 +1,16 @@
-+++
-author = "Issam Alzinati"
-title = "Access AWS Config Logs with AWS SSO User"
-date = "2022-07-25"
-description = "How to access encrypted AWS Config Logs with AWS SSO User from Shared Archive Account"
-tags = [
+---
+author : "Issam Alzinati"
+title : "Access AWS Config Logs with AWS SSO User"
+date : "2022-07-25"
+description : "How to access encrypted AWS Config Logs with AWS SSO User from Shared Archive Account"
+tags : [
     "aws",
     "aws config",
     "control tower",
     "aws sso",
     "aws iam",
 ]
-+++
+---
 
 I recently noticed a sudden increase in the AWS Config cost in the production environment. Because we are using AWS Control Tower to govern and manage the company's AWS accounts, we get out-of-the-box a dedicated AWS account where all logs are shipped to it, and part of these logs is the AWS Config logs. The name of this account is `Log Archive`.
 
@@ -29,7 +29,7 @@ Checking the file information and scrolling down in the page I found that `Serve
 ![S3 KMS Key](/images/post/access-aws-config-logs/aws-config-s3-kms-key.png)
 
 
-It turns out that AWS Config is configured to send the logs to S3 and encrypt then using a KMS key that is managed in the AWS Master account.
+It turns out that AWS Config is configured to send the logs to S3 and encrypt them using a KMS key that is managed in the AWS Master account.
 ```yaml
 # Part of the cloudformation stack the is deployed in the all accounts managed by AWs Control Twoer.
 Resources:
