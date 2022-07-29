@@ -1,14 +1,14 @@
-+++
-author = "Issam Alzinati"
-title = "How to dockerize and optimize python applications that depend on librdkafka library running on Mac M1"
-date = "2022-07-28"
-description = "How to dockerize and optimize python application that depend on librdkafka library running on Mac M1"
-tags = [
+---
+author : "Issam Alzinati"
+title : "How to dockerize and optimize python applications that depend on librdkafka library running on Mac M1"
+date : "2022-07-28"
+description : "How to dockerize and optimize python application that depend on librdkafka library running on Mac M1"
+tags : [
     "python",
     "docker",
     "kafka",
 ]
-+++
+---
 
 Recently I was working on a Python(3.7) project that uses Kafka. I added the Python package, `confluent-kafka` because we are using hosted Confluent Kafka, to the requirements file and created a simple docker file that installs the requirements, nothing fancy. This setup runs without any issues in our CI/CD, GitHub Actions, and images were built and pushed seamlessly.
 

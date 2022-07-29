@@ -1,6 +1,6 @@
-+++
-author = "Issam Alzinati"
-+++
+---
+author : "Issam Alzinati"
+---
 
 <!--
 This file is left intentionally empty by default to be backwards compatible with the initial theme setup.
