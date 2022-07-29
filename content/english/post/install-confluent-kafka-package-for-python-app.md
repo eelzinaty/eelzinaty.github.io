@@ -47,7 +47,7 @@ Interestingly, why a package that has external dependency would fail?! It is wor
 After hours of googling, trying different settings, and approaches... I came across this [excellent post](https://pythonspeed.com/articles/docker-build-problems-mac/) that explains in detail why specific packages are failing on Mac M1&M2 machines. 
 
 **Issue TL;DR**
-> Mac M1&M2 machines are ARM based. When the docker image is pulled, docker checks the underlying CPU architecture, then either pulls AMD or ARM images. Some python packages are only supporting AMD architecture, x86_64. To fix this issue you need either to pull the source code and build it or pull the docker image with ARM architecture.
+> Mac M1&M2 machines are ARM based. When the docker image is pulled, docker checks the underlying CPU architecture, then either pulls AMD or ARM images. Some python packages are only supporting AMD architecture, x86_64. To fix this issue you need either to pull the source code and build it or pull the docker image with AMD architecture.
 
 
 ## Solution
@@ -78,7 +78,7 @@ That is it! The image was built successfully.
 
 ## Bonus Tip: Optimizing the solution by using better docker caching and reducing the image size
 
-There is only one problem here: adding downloading and building this image will add extra steps to the build process, and it will increase the size of the image.
+There is only one problem here: downloading and building this image will add extra steps to the build process, and it will increase the size of the image.
 
 To solve this, we can use a multistage docker file structure and enable docker [buildkit](https://github.com/moby/buildkit) for parallel executing and enhanced caching.
 
@@ -109,14 +109,14 @@ RUN chmod +x /app/start-server.sh
 CMD ["sh", "/app/start-server.sh"]
 ```
 
-The first build took about 5 minutes and the image size was `1.57GB`.
+The first build took about `5 minutes` and the image size was `1.57GB`.
 ```shell
 $ docker image ls                    
 REPOSITORY          TAG          IMAGE ID       CREATED              SIZE
 platform-testing    test         8fe8cb338ca7   About a minute ago   1.57GB
 ```
 
-### Containerizing the application optimization(Faster Build and Smaller Image)
+### Containerizing the application, optimize for faster build and smaller image
 
 We are going to do the following:
 1. Enable docker [buildkit](https://github.com/moby/buildkit) for parallel executing and enhanced caching. This will speed up the build time.
@@ -135,11 +135,11 @@ ENV VIRTUAL_ENV=/opt/venv
 RUN python3 -m venv $VIRTUAL_ENV
 ENV PATH="$VIRTUAL_ENV/bin:$PATH"
 
-# Downlaod the librdkafka source code
+## Downlaod the librdkafka source code
 RUN git clone  --depth 1 --branch v1.9.1 https://github.com/edenhill/librdkafka.git
 WORKDIR librdkafka
 
-# Installation steps based on librdkafka build from source instructions
+## Installation steps based on librdkafka build from source instructions
 RUN ./configure --prefix /usr
 RUN make
 RUN make install
@@ -150,7 +150,7 @@ FROM base as builder
 
 WORKDIR /app
 
-# Installing python packages requirements.txt
+## Installing python packages requirements.txt
 COPY requirements.txt requirements.txt
 RUN pip3 install --upgrade pip
 RUN pip3 install wheel && pip3 install -r requirements.txt
@@ -159,19 +159,19 @@ RUN pip3 install wheel && pip3 install -r requirements.txt
 # The third stage is using slim image build and only runs the application
 FROM python:3.7-slim-buster as runtime
 
-# Copy the installed dependancies and setup the virtual environment
+## Copy the installed dependancies and setup the virtual environment
 COPY --from=builder /opt/venv /opt/venv
 ENV PATH="/opt/venv/bin:$PATH"
 
 WORKDIR /app
 
-# Get the code base and start the application
+## Get the code base and start the application
 COPY . /app
 RUN chmod +x /app/start-server.sh
 CMD ["sh", "/app/start-server.sh"]
 ```
 
-The first build took about 3.5 minutes and the image size was `354MB`, about `75%` decrease in size.
+The first build took about `3.5 minutes` and the image size was `354MB`, about `30%` faster build and`75%` decrease in size.
 ```shell
 $ docker build -f Dockerfile.optimized . -t platform-testing:optimized
 [+] Building 200s (22/22) FINISHED
